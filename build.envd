@@ -16,13 +16,7 @@ def whisper_serving():
     install.cuda(version="11.6.2")
     install.conda()
     install.python()
-    install.python_packages(name=[
-        "torch --extra-index-url https://download.pytorch.org/whl/cu116",
-        "transformers",
-        "mosec",
-    ])
-    install.python_packages(name=[
-        "datasets[audio]",
-    ])
+    install.python_packages(requirements="requirements.txt")
     io.copy("main.py", "/")
+    run(["python main.py --dry-run"])
     config.entrypoint(["python", "main.py", "--timeout", "10000"])
