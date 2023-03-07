@@ -1,22 +1,19 @@
 # syntax=v1
 
-def build():
-    base(dev=True)
-    install.cuda(version="11.6.2")
-    install.conda()
-    install.python()
-    install.python_packages(name=[
-        "torch --extra-index-url https://download.pytorch.org/whl/cu116",
-        "transformers",
-        "mosec",
-    ])
-
-
-def whisper_serving():
+def basic():
     install.cuda(version="11.6.2")
     install.conda()
     install.python()
     install.python_packages(requirements="requirements.txt")
+
+
+def build():
+    base(dev=True)
+    basic()
+
+
+def whisper_serving():
+    basic()
     io.copy("main.py", "/")
     run(["python main.py --dry-run"])
     config.entrypoint(["python", "main.py", "--timeout", "10000"])
