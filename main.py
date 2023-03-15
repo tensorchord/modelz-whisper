@@ -1,4 +1,4 @@
-import torch
+import torch,soundfile,io
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from mosec import Server, Worker
 
@@ -6,6 +6,11 @@ from mosec import Server, Worker
 class Preprocess(Worker):
     def __init__(self):
         self.processor = WhisperProcessor.from_pretrained("openai/whisper-base")
+
+    def deserialize(self, data: bytes) -> any:
+        with io.BytesIO(data) as byte_io:
+            array,sampling_rate =soundfile.read(byte_io)
+        return {'array':array,'sampling_rate':sampling_rate}
 
     def forward(self, data):
         res = self.processor(data['array'], sampling_rate=data['sampling_rate'], return_tensors="pt")
