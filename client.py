@@ -12,7 +12,7 @@ def main():
     with open(sample["path"], "rb") as f:
         resp = requests.post("http://localhost:8000/inference", data=f)
     if resp.status_code == HTTPStatus.OK:
-        print(resp.json())
+        print(resp.content.decode("utf-8"))
     else:
         print(resp.status_code, resp.text)
 

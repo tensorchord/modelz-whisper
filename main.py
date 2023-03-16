@@ -42,6 +42,9 @@ class Postprocess(Worker):
     def forward(self, data):
         return self.processor.batch_decode(data, skip_special_tokens=True)
 
+    def serialize(self, data: str) -> bytes:
+        return data.encode("utf-8")
+
 
 if __name__ == "__main__":
     server = Server()
