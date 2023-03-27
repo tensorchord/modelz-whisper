@@ -56,11 +56,14 @@ RUN pip install -r requirements.txt
 
 RUN mkdir -p /workspace
 
-COPY main.py workspace/
+COPY main.py /workspace/
 
-WORKDIR workspace
+WORKDIR /workspace
 
 RUN python main.py --dry-run
+
+# disable huggingface update check (could be very slow)
+ENV HF_HUB_OFFLINE=true
 
 ENTRYPOINT [ "python", "main.py" ]
 CMD [ "--timeout", "10000" ]
