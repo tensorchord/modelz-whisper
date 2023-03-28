@@ -1,4 +1,5 @@
 import torch, soundfile, io
+import numpy as np
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from mosec import Server, Worker
 
@@ -10,6 +11,9 @@ class Preprocess(Worker):
     def deserialize(self, data: bytes) -> any:
         with io.BytesIO(data) as byte_io:
             array, sampling_rate = soundfile.read(byte_io)
+        if array.shape[1] == 2:
+            # conbime the channel
+            array = np.mean(array, 1)
         return {"array": array, "sampling_rate": sampling_rate}
 
     def forward(self, data):
